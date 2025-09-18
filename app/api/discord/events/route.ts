@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
     const signature = req.headers.get("x-signature-ed25519");
 	const timestamp = req.headers.get("x-signature-timestamp");
-	const rawBody = JSON.stringify(req.body);
+	const rawBody = JSON.stringify(body);
 
     const isValid = await verify(rawBody, signature, timestamp, process.env.DISCORD_PUBLIC_KEY ?? '', crypto.webcrypto.subtle);
 
