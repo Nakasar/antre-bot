@@ -1,7 +1,7 @@
 import { isValidRequest } from "discord-verify/node";
 import { NextResponse } from "next/server";
 
-export default async function POST(req: Request) {
+export async function POST(req: Request) {
     const body = await req.json();
     console.debug(body);
 
