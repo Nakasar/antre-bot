@@ -4,7 +4,7 @@ import { verify } from "discord-verify/node";
 import { NextResponse } from "next/server";
 import crypto from 'node:crypto'; 
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN ?? '');
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN ?? '');
 
 export async function POST(req: Request) {
     const body = await req.json();
