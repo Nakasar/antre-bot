@@ -57,7 +57,11 @@ async function handleClearAfterCommand(interaction: APIMessageApplicationCommand
             },
         });
     } else if (messages.length === 1) {
-        await rest.delete(Routes.channelMessage(interaction.channel.id, messages[0].id));
+        await rest.delete(Routes.channelMessage(interaction.channel.id, messages[0].id), {
+            headers: {
+                'X-Audit-Log-Reason': `Clear after command used by ${interaction.member?.user.username || interaction.user?.username}`
+            }
+        });
 
         await rest.post(Routes.interactionCallback(interaction.id, interaction.token), {
             body: {
@@ -78,6 +82,9 @@ async function handleClearAfterCommand(interaction: APIMessageApplicationCommand
             await rest.post(Routes.channelBulkDelete(interaction.channel.id), {
                 body: {
                     messages: chunk.map(m => m.id),
+                },
+                headers: {
+                    'X-Audit-Log-Reason': `Clear after command used by ${interaction.member?.user.username || interaction.user?.username}`
                 },
             });
         }
