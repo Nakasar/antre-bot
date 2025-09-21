@@ -65,7 +65,7 @@ async function handleClearAfterCommand(interaction: APIMessageApplicationCommand
                 data: {
                     content: '1 message supprimé.',
                     flags: 64, // Ephemeral
-                },q
+                },
             },
         });
     } else {
