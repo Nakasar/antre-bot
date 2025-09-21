@@ -1,6 +1,10 @@
+import { REST } from "@discordjs/rest";
+import { APIApplicationCommand, APIApplicationCommandInteraction, APIMessageApplicationCommandInteraction, ApplicationCommandType, InteractionType, Routes, WebhookType } from "discord-api-types/v10";
 import { verify } from "discord-verify/node";
 import { NextResponse } from "next/server";
 import crypto from 'node:crypto'; 
+
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN ?? '');
 
 export async function POST(req: Request) {
     const body = await req.json();
@@ -20,11 +24,29 @@ export async function POST(req: Request) {
 
     if (body.type === 1) {
         return NextResponse.json({ type: 1 });
+    } else if (body.type === InteractionType.ApplicationCommand) {
+        return handleApplicationCommand(body);
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
 }
 
-async function handleDeleteMessagesAfterCommand(interaction: unknown) {
 
+async function handleApplicationCommand(body: APIMessageApplicationCommandInteraction) {
+    if (body.data.name === 'Clear after') {
+        return handleClearAfterCommand(body);
+    }
+}
+
+async function handleClearAfterCommand(interaction: APIMessageApplicationCommandInteraction) {
+    const query = new URLSearchParams();
+    query.set('after', interaction.data.target_id);
+
+    const messages = await rest.get(Routes.channelMessages(interaction.channel.id), {
+        query,
+    });
+
+    console.log(messages);
+
+    return NextResponse.json({ success: true }, { status: 200 });
 }
