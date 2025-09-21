@@ -7,18 +7,6 @@ import { SlashCommandBuilder, ContextMenuCommandBuilder } from '@discordjs/build
 export async function registerDiscordCommands() {
     console.log('Updating commands...');
     const commands = [
-        new SlashCommandBuilder()
-        .setName('clear')
-        .setDescription('Clear messages in the channel')
-        .setDescriptionLocalization('fr', 'Effacer les messages dans le canal')
-        .addIntegerOption(option =>
-            option.setName('amount')
-                .setDescription('Number of messages to delete (max 100)')
-                .setDescriptionLocalization('fr', 'Nombre de messages à effacer (max 100)')
-                .setRequired(true)
-                .setMinValue(1)
-                .setMaxValue(100)
-        ).toJSON(),
     new ContextMenuCommandBuilder()
         .setName('Clear after')
         .setNameLocalization('fr', 'Nettoyer après')
