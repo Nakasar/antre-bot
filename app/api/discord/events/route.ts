@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     const isValid = await verify(rawBody, signature, timestamp, process.env.DISCORD_PUBLIC_KEY ?? '', crypto.webcrypto.subtle);
     
     if (!isValid) {
+        console.warn('Invalid request signature');
         return NextResponse.json({ success: false }, { status: 403 });
     }
 
