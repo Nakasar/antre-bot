@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { APIApplicationCommand, APIApplicationCommandInteraction, APIMessageApplicationCommandInteraction, ApplicationCommandType, InteractionType, Routes, WebhookType } from "discord-api-types/v10";
+import { APIApplicationCommand, APIApplicationCommandInteraction, APIMessage, APIMessageApplicationCommandInteraction, ApplicationCommandType, InteractionType, Routes, WebhookType } from "discord-api-types/v10";
 import { verify } from "discord-verify/node";
 import { NextResponse } from "next/server";
 import crypto from 'node:crypto'; 
@@ -44,9 +44,54 @@ async function handleClearAfterCommand(interaction: APIMessageApplicationCommand
 
     const messages = await rest.get(Routes.channelMessages(interaction.channel.id), {
         query,
-    });
+    }) as APIMessage[];
 
-    console.log(messages);
+    if (messages.length === 0) {
+        await rest.post(Routes.interactionCallback(interaction.id, interaction.token), {
+            body: {
+                type: 4,
+                data: {
+                    content: 'Aucun message à supprimer après celui-ci.',
+                    flags: 64, // Ephemeral
+                },
+            },
+        });
+    } else if (messages.length === 1) {
+        await rest.delete(Routes.channelMessage(interaction.channel.id, messages[0].id));
+
+        await rest.post(Routes.interactionCallback(interaction.id, interaction.token), {
+            body: {
+                type: 4,
+                data: {
+                    content: '1 message supprimé.',
+                    flags: 64, // Ephemeral
+                },q
+            },
+        });
+    } else {
+        const deleteChunks = [];
+        for (let i = 0; i < messages.length; i += 100) {
+            deleteChunks.push(messages.slice(i, i + 100));
+        }
+        
+        for (const chunk of deleteChunks) {
+            await rest.post(Routes.channelBulkDelete(interaction.channel.id), {
+                body: {
+                    messages: chunk.map(m => m.id),
+                },
+            });
+        }
+
+        await rest.post(Routes.interactionCallback(interaction.id, interaction.token), {
+            body: {
+                type: 4,
+                data: {
+                    content: `${messages.length} messages supprimés.`,
+                    flags: 64, // Ephemeral
+                },
+            },
+        });
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
 }
