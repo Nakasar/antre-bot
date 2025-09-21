@@ -20,8 +20,8 @@ export async function registerDiscordCommands() {
                 .setMaxValue(100)
         ).toJSON(),
     new ContextMenuCommandBuilder()
-        .setName('Delete messages after this one')
-        .setNameLocalization('fr', 'Supprimer les messages après celui-ci')
+        .setName('Clear after')
+        .setNameLocalization('fr', 'Nettoyer après')
         .setType(ApplicationCommandType.Message)
         .toJSON()
     ];

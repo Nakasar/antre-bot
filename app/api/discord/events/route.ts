@@ -24,3 +24,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true }, { status: 200 });
 }
+
+async function handleDeleteMessagesAfterCommand(interaction: unknown) {
+
+}
