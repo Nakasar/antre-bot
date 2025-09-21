@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { APIApplicationCommand, APIApplicationCommandInteraction, APIMessage, APIMessageApplicationCommandInteraction, ApplicationCommandType, InteractionType, Routes, WebhookType } from "discord-api-types/v10";
+import { APIMessage, APIMessageApplicationCommandInteraction, InteractionType, Routes } from "discord-api-types/v10";
 import { verify } from "discord-verify/node";
 import { NextResponse } from "next/server";
 import crypto from 'node:crypto'; 
