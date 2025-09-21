@@ -22,6 +22,7 @@ export async function registerDiscordCommands() {
         );
     commands.push(deleteMessageCommands.toJSON());
 
+    console.log(process.env.DISCORD_TOKEN?.substring(0, 5) + '...');
     const rest = new REST().setToken(process.env.DISCORD_TOKEN ?? '');
 
     await rest.put(
