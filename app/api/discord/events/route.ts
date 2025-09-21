@@ -9,14 +9,14 @@ export async function POST(req: Request) {
 	const timestamp = req.headers.get("x-signature-timestamp");
 	const rawBody = JSON.stringify(body);
 
+    console.debug(body);
+
     const isValid = await verify(rawBody, signature, timestamp, process.env.DISCORD_PUBLIC_KEY ?? '', crypto.webcrypto.subtle);
     
     if (!isValid) {
         console.warn('Invalid request signature');
         return NextResponse.json({ success: false }, { status: 403 });
     }
-
-    console.debug(body);
 
     if (body.type === 1) {
         return NextResponse.json({ type: 1 });
